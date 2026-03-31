@@ -1,0 +1,13 @@
+{
+  "appId": "com.crypto.dashboard",
+  "appName": "Crypto Dashboard",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}

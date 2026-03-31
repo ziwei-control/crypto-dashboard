@@ -1,0 +1,68 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PWA
+*.log
+.DS_Store
+
+# Capacitor
+.capacitor/
+android/.gradle/
+android/.idea/
+android/local.properties
+android/.externalNativeBuild
+android/captures/
+android/app/build/
+android/app/release/
+android/local.properties
+
+# Logs
+logs/
+*.log
+nohup.out
+
+# OS
+.DS_Store
+Thumbs.db
+.svn/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.settings/
+
+# Other
+.cache/
+.tmp/
+temp/
+tmp/
+*.tmp
+*.temp

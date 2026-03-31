@@ -1,0 +1,26 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Python
+*.py text eol=lf
+*.sh text eol=lf
+
+# JSON
+*.json text eol=lf
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Shell
+*.sh text eol=lf
+
+# Images
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

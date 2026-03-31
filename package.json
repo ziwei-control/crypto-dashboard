@@ -1,0 +1,17 @@
+{
+  "name": "crypto_projects",
+  "version": "1.0.0",
+  "description": "本指南帮助您快速上手 Crypto Projects 加密货币交易策略与工具集合。",
+  "main": "sw.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0"
+  }
+}
