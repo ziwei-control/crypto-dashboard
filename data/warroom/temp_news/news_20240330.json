@@ -1,0 +1,28 @@
+{
+  "news": {
+    "BTC": [
+      {
+        "title": "Bitcoin breaks $70,000 milestone",
+        "content": "Bitcoin has reached new all-time high as institutional adoption accelerates",
+        "time": "2024-03-30T10:00:00Z",
+        "source": "CoinDesk"
+      }
+    ],
+    "ETH": [
+      {
+        "title": "Ethereum upgrade scheduled",
+        "content": "Ethereum's next upgrade is expected to improve scalability and reduce gas fees",
+        "time": "2024-03-30T09:30:00Z",
+        "source": "Ethereum Blog"
+      }
+    ],
+    "SOL": [
+      {
+        "title": "Solana ecosystem sees massive growth",
+        "content": "New DeFi protocols launch on Solana driving TVL to new heights",
+        "time": "2024-03-30T09:00:00Z",
+        "source": "CoinTelegraph"
+      }
+    ]
+  }
+}

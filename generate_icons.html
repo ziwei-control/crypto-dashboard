@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>生成 APP 图标</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .icon {
+            display: inline-block;
+            margin: 20px;
+            text-align: center;
+        }
+        .icon img {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .icon p {
+            margin-top: 10px;
+            font-size: 12px;
+        }
+        svg {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>🚀 Crypto Projects Dashboard - APP 图标</h1>
+    <p>右键点击图标，选择"图片另存为"下载各尺寸的 PNG 图标</p>
+    
+    <div class="icon">
+        <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <rect width="512" height="512" rx="100" ry="100" fill="url(#bg)"/>
+            <text x="256" y="320" font-family="Arial, sans-serif" font-size="200" font-weight="bold" text-anchor="middle" fill="white">₿</text>
+            <text x="256" y="380" font-family="Arial, sans-serif" font-size="50" text-anchor="middle" fill="white" opacity="0.8">Crypto</text>
+        </svg>
+        <p>512x512 (主要图标)</p>
+    </div>
+
+    <script>
+        // 自动生成其他尺寸的图标
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        sizes.forEach(size => {
+            const svg = document.querySelector('svg');
+            svg.setAttribute('width', size);
+            svg.setAttribute('height', size);
+            const svgData = new XMLSerializer().serializeToString(svg);
+            const canvas = document.createElement('canvas');
+            canvas.width = size;
+            canvas.height = size;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0);
+                const pngUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = `icon-${size}.png`;
+                link.href = pngUrl;
+                document.body.appendChild(link);
+            };
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+        });
+
+        // 提示用户手动下载
+        setTimeout(() => {
+            alert('请右键点击主图标，选择"图片另存为"下载 512x512 的图标。\n其他尺寸图标将在后台生成。');
+        }, 500);
+    </script>
+</body>
+</html>
