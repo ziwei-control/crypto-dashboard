@@ -30,28 +30,27 @@ jobs:
       - name: Build APK with Gradle
         run: |
           cd android
-          ./gradlew clean assembleDebug --no-daemon --stacktrace --info 2>&1 | tee /tmp/gradle.log
+          ./gradlew clean assembleDebug --no-daemon --stacktrace
         continue-on-error: true
-      
-      - name: Show Gradle output
-        if: always()
-        run: |
-          echo "=== GRADLE BUILD OUTPUT ==="
-          cat /tmp/gradle.log || echo "No log file"
-          echo "=== END GRADLE OUTPUT ==="
       
       - name: Find APK files
         run: |
-          echo "Searching for APK files..."
-          find android/ -name "*.apk" -type f || echo "No APK files found"
+          echo "=== Searching for APK files ==="
+          find android/ -name "*.apk" -type f
           echo ""
-          echo "Listing build outputs:"
-          ls -R android/app/build/outputs/ 2>/dev/null || echo "outputs directory not found"
+          echo "=== Listing build outputs ==="
+          ls -la android/app/build/outputs/apk/ 2>/dev/null || echo "APK directory not found"
+          echo ""
+          echo "=== Full build directory ==="
+          ls -R android/app/build/ 2>/dev/null | head -50
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: |
+            android/app/build/outputs/apk/debug/*.apk
+            android/app/build/outputs/apk/*.apk
+            android/**/*.apk
           retention-days: 30
           if-no-files-found: warn
