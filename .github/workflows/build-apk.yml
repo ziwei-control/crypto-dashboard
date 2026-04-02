@@ -5,7 +5,7 @@ on:
     branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
-  workflow_dispatch:  # 允许手动触发
+  workflow_dispatch:
 
 jobs:
   build:
@@ -15,30 +15,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
       
-      - name: Install npm dependencies
-        run: |
-          npm ci || npm install
-      
-      - name: Install Capacitor
-        run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android --save
-      
-      - name: Sync Capacitor
-        run: |
-          npx cap sync android
-        continue-on-error: true
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
@@ -46,12 +30,13 @@ jobs:
       - name: Build APK with Gradle
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon
+          ./gradlew assembleDebug --no-daemon --stacktrace
       
       - name: Verify APK
         run: |
-          ls -lh android/app/build/outputs/apk/debug/
-          find android/app/build/outputs/apk/ -name "*.apk"
+          echo "Looking for APK..."
+          find android/app/build/outputs/apk/ -name "*.apk" -ls
+          ls -lh android/app/build/outputs/apk/debug/ || true
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
