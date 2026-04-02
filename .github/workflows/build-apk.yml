@@ -35,27 +35,15 @@ jobs:
       - name: Find APK files
         run: |
           echo "Searching for APK files..."
-          find android/ -name "*.apk" -type f
+          find android/ -name "*.apk" -type f || echo "No APK files found"
           echo ""
-          echo "Listing build outputs directory:"
+          echo "Listing build outputs:"
           ls -R android/app/build/outputs/ 2>/dev/null || echo "outputs directory not found"
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: |
-            android/app/build/outputs/apk/**/*.apk
-            android/**/*-debug.apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
           retention-days: 30
           if-no-files-found: warn
-      
-      - name: Create Release
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            android/app/build/outputs/apk/**/*.apk
-            android/**/*-debug.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
