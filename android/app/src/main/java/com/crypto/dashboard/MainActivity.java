@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
-import android.webkit.WebConsoleMessage;
+import android.webkit.ConsoleMessage;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
         
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
-            public boolean onConsoleMessage(WebConsoleMessage consoleMessage) {
+            public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
                 Log.d(TAG, "Console: " + consoleMessage.message() + " -- From line " 
                     + consoleMessage.lineNumber() + " of " + consoleMessage.sourceId());
                 return true;
