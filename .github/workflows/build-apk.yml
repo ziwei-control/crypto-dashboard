@@ -30,8 +30,15 @@ jobs:
       - name: Build APK with Gradle
         run: |
           cd android
-          ./gradlew clean assembleDebug --no-daemon --stacktrace
-        continue-on-error: true
+          echo "=== Java Version ==="
+          java -version
+          echo ""
+          echo "=== Gradle Version ==="
+          ./gradlew --version
+          echo ""
+          echo "=== Starting Build ==="
+          ./gradlew clean assembleDebug --no-daemon --stacktrace --info
+        continue-on-error: false
       
       - name: Find APK files
         run: |
