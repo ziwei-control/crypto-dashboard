@@ -8,9 +8,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceError;
+import android.util.Log;
 
 public class MainActivity extends Activity {
     private WebView webView;
+    private static final String TAG = "CryptoDashboard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +51,27 @@ public class MainActivity extends Activity {
             webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
         
-        // Set WebViewClient to handle page navigation
-        webView.setWebViewClient(new WebViewClient());
+        // Set WebViewClient to handle page navigation and errors
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.e(TAG, "WebView error: " + error.getDescription() + " for URL: " + request.getUrl());
+                super.onReceivedError(view, request, error);
+            }
+            
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                Log.e(TAG, "WebView error: " + description + " for URL: " + failingUrl);
+                super.onReceivedError(view, errorCode, description, failingUrl);
+            }
+        });
+        
         webView.setWebChromeClient(new WebChromeClient());
         
         // Load local PWA
-        webView.loadUrl("file:///android_asset/www/index.html");
+        String url = "file:///android_asset/www/index.html";
+        Log.d(TAG, "Loading URL: " + url);
+        webView.loadUrl(url);
     }
 
     @Override
