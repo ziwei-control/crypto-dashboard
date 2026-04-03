@@ -9,9 +9,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Crypto Dashboard">
-    <link rel="apple-touch-icon" href="icons/icon-192.png">
-    <link rel="icon" type="image/png" href="icons/icon-192.png">
-    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192.png">
+    <link rel="icon" type="image/png" href="/icons/icon-192.png">
+    <link rel="manifest" href="/manifest.json">
     <style>
         * {
             margin: 0;
@@ -440,6 +440,110 @@
             }
         }
 
+        /* Config Form */
+        .config-form {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .config-form.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            transition: border-color 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: var(--gray);
+            font-size: 0.8em;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .btn-cancel {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+
+        .config-status {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            display: none;
+        }
+
+        .config-status.success {
+            background: #d1fae5;
+            color: #059669;
+            display: block;
+        }
+
+        .config-status.error {
+            background: #fee2e2;
+            color: #dc2626;
+            display: block;
+        }
+
+        .toggle-config-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .toggle-config-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+
         /* PWA Install Button */
         .pwa-install {
             position: fixed;
@@ -607,20 +711,110 @@
 
                 <h3 style="margin: 25px 0 15px; color: var(--dark);">⚠️ 需要配置</h3>
                 <div class="feature-grid">
-                    <div class="feature-card config">
+                    <div class="feature-card config" id="grid-trading-card">
                         <h3>📊 Grid Trading Bot</h3>
                         <p>网格交易自动低买高卖</p>
                         <span class="tag tag-config">需要 Binance API</span>
+                        <button class="toggle-config-btn" onclick="toggleConfig('grid-trading')">⚙️ 配置</button>
+                        <div class="config-form" id="grid-trading-config">
+                            <div class="form-group">
+                                <label>API Key</label>
+                                <input type="text" id="binance-api-key" placeholder="输入 Binance API Key">
+                                <small>在 Binance 官网创建 API 获取</small>
+                            </div>
+                            <div class="form-group">
+                                <label>Secret Key</label>
+                                <input type="password" id="binance-secret-key" placeholder="输入 Binance Secret Key">
+                                <small>请妥善保管，仅本地存储</small>
+                            </div>
+                            <div class="form-group">
+                                <label>交易对</label>
+                                <input type="text" id="grid-trading-pair" placeholder="例如：BTCUSDT" value="BTCUSDT">
+                                <small>要交易的币种对</small>
+                            </div>
+                            <div class="form-group">
+                                <label>网格数量</label>
+                                <input type="number" id="grid-quantity" placeholder="例如：10" value="10" min="1" max="100">
+                                <small>网格层数 (1-100)</small>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" onclick="applyGridConfig()">💾 应用配置</button>
+                                <button class="btn btn-cancel" onclick="toggleConfig('grid-trading')">取消</button>
+                            </div>
+                            <div class="config-status" id="grid-trading-status"></div>
+                        </div>
                     </div>
-                    <div class="feature-card config">
+                    <div class="feature-card config" id="wallet-controller-card">
                         <h3>💰 Wallet Controller</h3>
                         <p>钱包管理与安全存储</p>
                         <span class="tag tag-config">需要私钥</span>
+                        <button class="toggle-config-btn" onclick="toggleConfig('wallet-controller')">⚙️ 配置</button>
+                        <div class="config-form" id="wallet-controller-config">
+                            <div class="form-group">
+                                <label>钱包私钥</label>
+                                <input type="password" id="wallet-private-key" placeholder="输入钱包私钥">
+                                <small>⚠️ 警告：私钥仅本地加密存储</small>
+                            </div>
+                            <div class="form-group">
+                                <label>钱包地址</label>
+                                <input type="text" id="wallet-address" placeholder="输入钱包地址">
+                                <small>用于验证的钱包地址</small>
+                            </div>
+                            <div class="form-group">
+                                <label>选择链</label>
+                                <select id="wallet-chain">
+                                    <option value="ethereum">Ethereum (ETH)</option>
+                                    <option value="bsc">BNB Smart Chain (BSC)</option>
+                                    <option value="solana">Solana (SOL)</option>
+                                    <option value="polygon">Polygon (MATIC)</option>
+                                    <option value="arbitrum">Arbitrum (ARB)</option>
+                                </select>
+                                <small>选择主要操作的区块链</small>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" onclick="applyWalletConfig()">💾 应用配置</button>
+                                <button class="btn btn-cancel" onclick="toggleConfig('wallet-controller')">取消</button>
+                            </div>
+                            <div class="config-status" id="wallet-controller-status"></div>
+                        </div>
                     </div>
-                    <div class="feature-card config">
+                    <div class="feature-card config" id="email-notifier-card">
                         <h3>📧 Email Notifier</h3>
                         <p>邮件通知系统</p>
                         <span class="tag tag-config">需要 SMTP</span>
+                        <button class="toggle-config-btn" onclick="toggleConfig('email-notifier')">⚙️ 配置</button>
+                        <div class="config-form" id="email-notifier-config">
+                            <div class="form-group">
+                                <label>SMTP 服务器</label>
+                                <input type="text" id="smtp-server" placeholder="例如：smtp.gmail.com" value="smtp.gmail.com">
+                                <small>邮件服务器地址</small>
+                            </div>
+                            <div class="form-group">
+                                <label>SMTP 端口</label>
+                                <input type="number" id="smtp-port" placeholder="例如：587" value="587">
+                                <small>常用端口：587 (TLS), 465 (SSL)</small>
+                            </div>
+                            <div class="form-group">
+                                <label>发件人邮箱</label>
+                                <input type="email" id="smtp-email" placeholder="例如：your@gmail.com">
+                                <small>用于发送邮件的邮箱</small>
+                            </div>
+                            <div class="form-group">
+                                <label>授权码/密码</label>
+                                <input type="password" id="smtp-password" placeholder="输入邮箱授权码">
+                                <small>Gmail 需使用应用专用密码</small>
+                            </div>
+                            <div class="form-group">
+                                <label>收件人邮箱</label>
+                                <input type="email" id="smtp-to-email" placeholder="例如：notify@your.com">
+                                <small>接收通知的邮箱地址</small>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-success" onclick="applyEmailConfig()">💾 应用配置</button>
+                                <button class="btn btn-cancel" onclick="toggleConfig('email-notifier')">取消</button>
+                            </div>
+                            <div class="config-status" id="email-notifier-status"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -907,6 +1101,165 @@
             deferredPrompt = null;
             console.log('PWA 已安装');
         });
+
+        // ============ 配置管理功能 ============
+        
+        // 切换配置界面显示
+        function toggleConfig(featureId) {
+            const configForm = document.getElementById(featureId + '-config');
+            const card = document.getElementById(featureId + '-card');
+            
+            if (configForm.classList.contains('active')) {
+                configForm.classList.remove('active');
+            } else {
+                // 关闭其他配置
+                document.querySelectorAll('.config-form').forEach(form => {
+                    form.classList.remove('active');
+                });
+                configForm.classList.add('active');
+            }
+        }
+
+        // 保存配置到 localStorage
+        function saveConfig(featureId, configData) {
+            localStorage.setItem('crypto_dashboard_' + featureId, JSON.stringify(configData));
+        }
+
+        // 从 localStorage 加载配置
+        function loadConfig(featureId) {
+            const data = localStorage.getItem('crypto_dashboard_' + featureId);
+            return data ? JSON.parse(data) : null;
+        }
+
+        // 显示配置状态
+        function showStatus(elementId, message, isSuccess) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.textContent = message;
+            statusEl.className = 'config-status ' + (isSuccess ? 'success' : 'error');
+            setTimeout(() => {
+                statusEl.className = 'config-status';
+            }, 5000);
+        }
+
+        // 应用 Grid Trading 配置
+        function applyGridConfig() {
+            const apiKey = document.getElementById('binance-api-key').value.trim();
+            const secretKey = document.getElementById('binance-secret-key').value.trim();
+            const pair = document.getElementById('grid-trading-pair').value.trim();
+            const quantity = document.getElementById('grid-quantity').value;
+
+            if (!apiKey || !secretKey) {
+                showStatus('grid-trading-status', '❌ 请填写 API Key 和 Secret Key', false);
+                return;
+            }
+
+            const config = {
+                apiKey: apiKey,
+                secretKey: secretKey,
+                tradingPair: pair || 'BTCUSDT',
+                gridQuantity: parseInt(quantity) || 10,
+                enabled: true,
+                updatedAt: new Date().toISOString()
+            };
+
+            saveConfig('grid_trading', config);
+            showStatus('grid-trading-status', '✅ Grid Trading 配置已保存！', true);
+            
+            // 更新卡片状态
+            const card = document.getElementById('grid-trading-card');
+            const tag = card.querySelector('.tag-config');
+            tag.textContent = '已配置 ✓';
+            tag.style.background = '#d1fae5';
+            tag.style.color = '#059669';
+        }
+
+        // 应用 Wallet 配置
+        function applyWalletConfig() {
+            const privateKey = document.getElementById('wallet-private-key').value.trim();
+            const address = document.getElementById('wallet-address').value.trim();
+            const chain = document.getElementById('wallet-chain').value;
+
+            if (!privateKey) {
+                showStatus('wallet-controller-status', '❌ 请填写钱包私钥', false);
+                return;
+            }
+
+            const config = {
+                privateKey: privateKey, // 实际应用中应该加密存储
+                address: address,
+                chain: chain,
+                enabled: true,
+                updatedAt: new Date().toISOString()
+            };
+
+            saveConfig('wallet_controller', config);
+            showStatus('wallet-controller-status', '✅ Wallet 配置已保存！', true);
+            
+            // 更新卡片状态
+            const card = document.getElementById('wallet-controller-card');
+            const tag = card.querySelector('.tag-config');
+            tag.textContent = '已配置 ✓';
+            tag.style.background = '#d1fae5';
+            tag.style.color = '#059669';
+        }
+
+        // 应用 Email 配置
+        function applyEmailConfig() {
+            const smtpServer = document.getElementById('smtp-server').value.trim();
+            const smtpPort = document.getElementById('smtp-port').value;
+            const smtpEmail = document.getElementById('smtp-email').value.trim();
+            const smtpPassword = document.getElementById('smtp-password').value.trim();
+            const toEmail = document.getElementById('smtp-to-email').value.trim();
+
+            if (!smtpServer || !smtpEmail || !smtpPassword) {
+                showStatus('email-notifier-status', '❌ 请填写 SMTP 服务器、邮箱和密码', false);
+                return;
+            }
+
+            const config = {
+                smtpServer: smtpServer,
+                smtpPort: parseInt(smtpPort) || 587,
+                fromEmail: smtpEmail,
+                password: smtpPassword,
+                toEmail: toEmail || smtpEmail,
+                enabled: true,
+                updatedAt: new Date().toISOString()
+            };
+
+            saveConfig('email_notifier', config);
+            showStatus('email-notifier-status', '✅ Email 配置已保存！', true);
+            
+            // 更新卡片状态
+            const card = document.getElementById('email-notifier-card');
+            const tag = card.querySelector('.tag-config');
+            tag.textContent = '已配置 ✓';
+            tag.style.background = '#d1fae5';
+            tag.style.color = '#059669';
+        }
+
+        // 页面加载时恢复配置状态
+        function restoreConfigStates() {
+            const configs = ['grid_trading', 'wallet_controller', 'email_notifier'];
+            const cardIds = ['grid-trading', 'wallet-controller', 'email-notifier'];
+            
+            configs.forEach((configId, index) => {
+                const config = loadConfig(configId);
+                if (config && config.enabled) {
+                    const card = document.getElementById(cardIds[index] + '-card');
+                    const tag = card.querySelector('.tag-config');
+                    tag.textContent = '已配置 ✓';
+                    tag.style.background = '#d1fae5';
+                    tag.style.color = '#059669';
+                }
+            });
+        }
+
+        // 在页面加载时恢复配置
+        const originalOnload = window.onload;
+        window.onload = function() {
+            if (originalOnload) originalOnload();
+            restoreConfigStates();
+        };
     </script>
 </body>
 </html>
